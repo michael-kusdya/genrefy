@@ -114,7 +114,7 @@ class GenreSelector extends Component {
     componentDidMount() {
         if (window.performance) {
             if (performance.navigation.type === 1) {
-                this.props.history.push("/genrefy");
+                this.props.history.push("/");
             } else {
                 const accessToken = qs
                     .parse(window.location.hash, {ignoreQueryPrefix: true})
@@ -158,7 +158,7 @@ class GenreSelector extends Component {
                         </GenreButton>
                     )) }
                 </WrapperButton>
-                { this.state.selectedGenres.length > 0 ? <ButtonGo to="/genrefy/result" onClick={this.getRecommendations}> Go </ButtonGo> : null }
+                { this.state.selectedGenres.length > 0 ? <ButtonGo to="/result" onClick={this.getRecommendations}> Go </ButtonGo> : null }
                 
             </Wrapper>
         );

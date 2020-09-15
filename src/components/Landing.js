@@ -33,9 +33,9 @@ class Landing extends Component {
         const client_id = '8c3867d5b746458d88de9964a5d8761d'
         let redirect_uri;
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-            redirect_uri = 'http://localhost:3000/genrefy/select-genre';
+            redirect_uri = 'http://localhost:3000/select-genre';
         } else {
-            redirect_uri = 'https://michael-kusdya.github.io/genrefy/select-genre';
+            redirect_uri = 'https://genrefy-playlist-maker.herokuapp.com/select-genre';
         }
         const scope = 'user-read-recently-played,user-top-read,playlist-modify-public'
         let url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=token&redirect_uri=${redirect_uri}&scope=${scope}`

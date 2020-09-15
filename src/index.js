@@ -22,9 +22,9 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <Switch>
-        <Route exact path="/genrefy" component={Landing} />
-        <Route path="/genrefy/select-genre" component={GenreSelector} />
-        <Route path="/genrefy/result" component={Result} />
+        <Route exact path="/" component={Landing} />
+        <Route path="/select-genre" component={GenreSelector} />
+        <Route path="/result" component={Result} />
       </Switch>
     </Router>
   </Provider>

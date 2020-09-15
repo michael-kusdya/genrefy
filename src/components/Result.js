@@ -58,7 +58,7 @@ class Result extends Component {
         super(props);
         if (window.performance) {
             if (performance.navigation.type === 1) {
-                this.props.history.push("/genrefy");
+                this.props.history.push("/");
             }
         } 
     }
@@ -77,7 +77,7 @@ class Result extends Component {
                 </WrapperCard>
                 <WrapperNav>
                     <NavButton handleClick={this.createPlaylist} text='Create Playlist'></NavButton>
-                    <ButtonBack to='/genrefy'>Try Again</ButtonBack>
+                    <ButtonBack to='/'>Try Again</ButtonBack>
                 </WrapperNav>   
             </Wrapper>
         );
