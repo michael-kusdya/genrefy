@@ -2,8 +2,6 @@
 
 Genrefy is a web app built in React to help you discover new songs based on your favorite genre
 
-=========================================================================================
-
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
