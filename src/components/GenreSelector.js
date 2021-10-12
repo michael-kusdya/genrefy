@@ -50,17 +50,6 @@ const GenreSelector = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    useEffect(() => {
-        if(!tokenFromState){
-            const tokenFromUrl = qs
-                .parse(window.location.hash, {ignoreQueryPrefix: true})
-                .access_token;/* To bypass the leading question mark, use ignoreQueryPrefix:        */
-            dispatch(saveToken(tokenFromUrl))
-            dispatch(fetchUserDetail(tokenFromUrl))
-            window.location.hash = '' 
-        }
-    }, [])
-
     const tokenFromState = useSelector((state) => state?.token)
 
     const [selectedGenres, setSelectedGenres] = useState([])
@@ -113,7 +102,16 @@ const GenreSelector = () => {
         "trance",
     ]
 
-
+    useEffect(() => {
+        if(!tokenFromState){
+            const tokenFromUrl = qs
+                .parse(window.location.hash, {ignoreQueryPrefix: true})
+                .access_token;/* To bypass the leading question mark, use ignoreQueryPrefix:        */
+            dispatch(saveToken(tokenFromUrl))
+            dispatch(fetchUserDetail(tokenFromUrl))
+            window.location.hash = '' 
+        }
+    }, [tokenFromState])
 
     const selectedGenre = (genre) => {
         if(selectedGenres.indexOf(genre) !== -1){
