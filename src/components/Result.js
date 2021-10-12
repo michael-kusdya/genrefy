@@ -1,10 +1,12 @@
-import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import {  NavLink  } from "react-router-dom";
-import { createAndFillPlaylist } from '../actions'
+import React, {useEffect} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from "react-router-dom";
+import styled from 'styled-components';
+
+import { createAndFillPlaylist, resetPlaylist } from '../actions'
 import SongCard from './SongCard'
 import NavButton from './NavButton';
-import styled from 'styled-components';
+
 
 const WrapperCard = styled.div`
     display: grid;
@@ -37,57 +39,43 @@ const Subtitle = styled.h2`
     color: #f2f2f2;
 `;
 
-const ButtonBack = styled(NavLink)`
-    border: 5px solid;
-    text-align: center;
-    padding: 10px;
-    width: 100px;
-    cursor: pointer;
-    margin: 10px;
-    border-radius: 10px;
-    background-color: transparent;
-    color: #f2f2f2;
-    font-weight: 700;
-    font-size: 1em;
-    outline: none;
-    text-decoration: none;
-`
+const Result = () => {
 
-class Result extends Component {
-    constructor(props) {
-        super(props);
-        if (window.performance) {
-            if (performance.navigation.type === 1) {
-                this.props.history.push("/");
-            }
-        } 
+    const dispatch = useDispatch();
+    const playlistDetail = useSelector((state) => state?.playlistDetail)
+    const recommendations = useSelector((state) => state?.recommendations)
+    const history = useHistory();
+
+    useEffect(() => {
+        if(playlistDetail.external_urls?.spotify){
+            window.open(playlistDetail.external_urls?.spotify, "_blank")
+        }
+    })
+
+    const createPlaylist = async () => {
+        dispatch(createAndFillPlaylist(recommendations))
     }
 
-    createPlaylist = async () => {
-        await this.props.createAndFillPlaylist()
-        window.open(this.props.playlist.external_urls.spotify, "_blank")
+    const reset = async () => {
+        dispatch(resetPlaylist())
+        history.push('select-genre')
     }
 
-    render() {
-        return (
-            <Wrapper>
-                <Subtitle>Songs you might like: </Subtitle> 
-                <WrapperCard>   
-                    <SongCard />
-                </WrapperCard>
-                <WrapperNav>
-                    <NavButton handleClick={this.createPlaylist} text='Create Playlist'></NavButton>
-                    <ButtonBack to='/'>Try Again</ButtonBack>
-                </WrapperNav>   
-            </Wrapper>
-        );
-        
-    }
+    return (
+        <Wrapper>
+            <Subtitle>Songs you might like: </Subtitle> 
+            <WrapperCard>   
+                <SongCard />
+            </WrapperCard>
+            <WrapperNav>
+                <NavButton handleClick={createPlaylist} text='Create Playlist'></NavButton>
+                <NavButton handleClick={reset} text='Try Again'></NavButton>
+            </WrapperNav>   
+        </Wrapper>
+    );
 }
 
-const mapStateToProps = state => {
-    return {playlist: state.playlistDetail};
-};
 
-export default connect(mapStateToProps, {createAndFillPlaylist})(Result);
+
+export default Result;
 

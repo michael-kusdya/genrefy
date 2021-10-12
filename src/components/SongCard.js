@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 const Card = styled.div`
@@ -45,32 +45,24 @@ const SongName = styled.p`
     }
 `;
 
-class SongCard extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {  }
-    }
+const SongCard = () => {
 
-    openSong = (url) => {
+    const recommendations = useSelector((state) => state?.recommendations)
+    const openSong = (url) => {
         window.open(url, '_blank')
     }
-    render() {
-        return (
-                 this.props.recommendations.slice(0,12).map((item, index) => (
-                        <Card onClick={() => this.openSong(item.external_urls.spotify)} key={index}>
-                            <AlbumCover src={item.album.images[1].url} />
-                            <SongDetailWrapper>
-                                <ArtistName>{item.artists[0].name}</ArtistName>
-                                <SongName>{item.name.length >= 20 ? item.name.slice(0, 20) + '...'  : item.name }</SongName>
-                            </SongDetailWrapper>
-                        </Card>
-                )) 
-         );
-    }
+
+    return (
+        recommendations.slice(0,12).map((item, index) => (
+               <Card onClick={() => openSong(item.external_urls.spotify)} key={index}>
+                   <AlbumCover src={item.album.images[1].url} />
+                   <SongDetailWrapper>
+                       <ArtistName>{item.artists[0].name}</ArtistName>
+                       <SongName>{item.name.length >= 20 ? item.name.slice(0, 20) + '...'  : item.name }</SongName>
+                   </SongDetailWrapper>
+               </Card>
+       )) 
+    );
 }
 
-const mapStateToProps = state => {
-    return {recommendations: state.recommendations};
-};
-
-export default connect(mapStateToProps, null)(SongCard);
+export default SongCard;

@@ -1,8 +1,11 @@
-import React, {Component} from 'react';
-import { connect } from 'react-redux';
-import {  NavLink } from "react-router-dom";
-import { saveToken, fetchRecommendation, fetchUserDetail } from '../actions';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from "react-router-dom";
 import styled from 'styled-components';
+
+import NavButton from './NavButton';
+import { saveToken, fetchRecommendation, fetchUserDetail } from '../actions';
+
 
 const WrapperButton = styled.div`
     display: flex;
@@ -35,22 +38,6 @@ const GenreButton = styled.button`
     border-radius: 10px;
 `;
 
-const ButtonGo = styled(NavLink)`
-    border: 5px solid;
-    text-align: center;
-    padding: 10px;
-    width: 50px;
-    cursor: pointer;
-    margin: 10px;
-    border-radius: 10px;
-    background-color: transparent;
-    color: #f2f2f2;
-    font-weight: 600;
-    font-size: 1em;
-    outline: none;
-    text-decoration: none;
-`
-
 const Subtitle = styled.h2`
     color: #f2f2f2;
 `;
@@ -58,11 +45,26 @@ const Subtitle = styled.h2`
 const qs = require('query-string');
 
 
-class GenreSelector extends Component {
+const GenreSelector = () => {
 
-    state = {accessToken: null, selectedGenres: [], activeIndex: [] }
+    const dispatch = useDispatch();
+    const history = useHistory();
 
-    genres = [
+    useEffect(() => {
+        if(!tokenFromState){
+            const tokenFromUrl = qs
+                .parse(window.location.hash, {ignoreQueryPrefix: true})
+                .access_token;/* To bypass the leading question mark, use ignoreQueryPrefix:        */
+            dispatch(saveToken(tokenFromUrl))
+            dispatch(fetchUserDetail(tokenFromUrl))
+            window.location.hash = '' 
+        }
+    }, [])
+
+    const tokenFromState = useSelector((state) => state?.token)
+
+    const [selectedGenres, setSelectedGenres] = useState([])
+    const genres = [
         "acoustic",
         "afrobeat",
         "alt-rock",
@@ -111,63 +113,36 @@ class GenreSelector extends Component {
         "trance",
     ]
 
-    componentDidMount() {
-        if (window.performance) {
-            if (performance.navigation.type === 1) {
-                this.props.history.push("/");
-            } else {
-                const accessToken = qs
-                    .parse(window.location.hash, {ignoreQueryPrefix: true})
-                    .access_token;/* To bypass the leading question mark, use ignoreQueryPrefix:        */
 
-                this.props.saveToken(accessToken)
-                this.setState({accessToken: accessToken})
-                this.props.fetchUserDetail()
-                window.location.hash = ''
-                // this.getUserInfo(accessToken)
-            }
-        } 
-        
-    }
 
-    selectedGenre = (genre) => {
-        if(this.state.selectedGenres.indexOf(genre) !== -1){
-            this.setState(prevState => ({
-                selectedGenres: prevState.selectedGenres.filter(item => item !== genre)
-            }))
+    const selectedGenre = (genre) => {
+        if(selectedGenres.indexOf(genre) !== -1){
+            setSelectedGenres(prevState => prevState.filter(item => item !== genre))
         } else {
-            this.setState(prevState => ({
-                selectedGenres: [...prevState.selectedGenres, genre]
-            }))
+            setSelectedGenres(prevState => [...prevState, genre])
         }
     }
 
-    getRecommendations = () => {
-        let seed_genres = this.state.selectedGenres.join(',')
-        this.props.fetchRecommendation(seed_genres)
+    const getRecommendations = () => {
+        let seed_genres = selectedGenres.join(',')
+        dispatch(fetchRecommendation(seed_genres, tokenFromState))
+        history.push('result')
     }
     // 
-    render() {
-        return (
-            <Wrapper>
-                <Subtitle>Choose your favorite genre: </Subtitle>
-                <WrapperButton>
-                    { this.genres.map((genre, index) => (
-                        <GenreButton selected={this.state.selectedGenres.includes(genre)} onClick={() => {this.selectedGenre(genre)}} key={index}>
-                            {genre}
-                        </GenreButton>
-                    )) }
-                </WrapperButton>
-                { this.state.selectedGenres.length > 0 ? <ButtonGo to="/result" onClick={this.getRecommendations}> Go </ButtonGo> : null }
-                
-            </Wrapper>
-        );
-    }
+    return (
+        <Wrapper>
+            <Subtitle>Choose your favorite genre: </Subtitle>
+            <WrapperButton>
+                { genres.map((genre, index) => (
+                    <GenreButton selected={selectedGenres.includes(genre)} onClick={() => {selectedGenre(genre)}} key={index}>
+                        {genre}
+                    </GenreButton>
+                )) }
+            </WrapperButton>
+            { selectedGenres.length > 0 ? <NavButton handleClick={getRecommendations} text='Go' />: null }
+            
+        </Wrapper>
+    );
 }
 
-export default connect(
-    null,
-    { saveToken, fetchRecommendation, fetchUserDetail }
-  )(GenreSelector);
-
-// export default Home;
+export default GenreSelector;

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import NavButton from './NavButton';
 
@@ -26,11 +26,11 @@ const Description = styled.h2`
 `;
 
 
-class Landing extends Component {
+const Landing = () => {
 
-    getAccessToken = () => {
+    const getAccessToken = () => {
 
-        const client_id = '8c3867d5b746458d88de9964a5d8761d'
+        const client_id = process.env.REACT_APP_CLIENT_ID
         let redirect_uri;
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             redirect_uri = 'http://localhost:3000/select-genre';
@@ -45,15 +45,13 @@ class Landing extends Component {
             .replace(url)
     }
 
-    render() {
-        return (
-            <Wrapper>
-                <Title>Genrefy</Title>
-                <Description> Discover new song based on your favorite genre </Description>
-                <NavButton handleClick={() => this.getAccessToken()} text='Connect to Spotify'></NavButton>
-            </Wrapper>
-        );
-    }
+    return (
+        <Wrapper>
+            <Title>Genrefy</Title>
+            <Description> Discover new song based on your favorite genre </Description>
+            <NavButton handleClick={() => getAccessToken()} text='Connect to Spotify'></NavButton>
+        </Wrapper>
+    );
 }
 
 export default Landing;

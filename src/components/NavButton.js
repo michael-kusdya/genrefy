@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Nav = styled.button`
@@ -17,10 +17,8 @@ const Nav = styled.button`
     height: 60px;
 `;
 
-class NavButton extends Component {
-    render() { 
-        return ( <Nav onClick={this.props.handleClick}> {this.props.text} </Nav> );
-    }
+const NavButton = ({handleClick, text}) => {
+    return ( <Nav onClick={handleClick}> {text} </Nav> );
 }
  
 export default NavButton
