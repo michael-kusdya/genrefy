@@ -35,7 +35,7 @@ const Landing = () => {
         if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
             redirect_uri = 'http://localhost:3000/select-genre';
         } else {
-            redirect_uri = 'https://genrefy-playlist-maker.herokuapp.com/select-genre';
+            redirect_uri = 'https://genrefy.netlify.app/';
         }
         const scope = 'user-read-recently-played,user-top-read,playlist-modify-public'
         let url = `https://accounts.spotify.com/authorize?client_id=${client_id}&response_type=token&redirect_uri=${redirect_uri}&scope=${scope}`
