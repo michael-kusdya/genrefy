@@ -2,7 +2,7 @@
   "name": "genrefy",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://genrefy-playlist-maker.herokuapp.com/",
+  "homepage": "https://genrefy.netlify.app/",
   "engines": {
     "npm": "6.4.1",
     "node": "10.15.0"
