@@ -1,4 +1,4 @@
-## DEMO: https://genrefy-playlist-maker.herokuapp.com/
+## DEMO: https://genrefy.netlify.app/
 
 Genrefy is a web app built in React to help you discover new songs based on your favorite genre
 
